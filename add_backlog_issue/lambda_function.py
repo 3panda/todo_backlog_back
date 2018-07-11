@@ -9,39 +9,28 @@ import urllib
 def lambda_handler(event, context):
     try:
         HOST = os.environ['HOST']
-        PROJECT_KEY = os.environ['PROJECT_KEY']
         API_KEY = os.environ['API_KEY']
-
-        # 仮 フロントから渡る値
-        ISSUE_TYPE_ID = 147348
-        PRIORITY_ID = 1
-        PROJECT_ID = 32538
-        My_ID = 84381
-
-        print(HOST)
-        print(PROJECT_KEY)
-        print(API_KEY)
 
         # 課題の追加
         # ${HOST}/api/v2/issues?${API_KEY}
-        description = """===
-        これは課題投稿のテストです。
-        Backlog APIを利用してPythonから課題を投稿しています。
-        ===
 
-        """
+        # フロントから渡る値を設定
         data = {
-            'projectId': PROJECT_ID,  # 課題を登録するプロジェクトのID
-            'summary': '課題投稿サンプル',  # 課題の件名
-            'assigneeId': My_ID,  # 課題の担当者ID
-            'issueTypeId': ISSUE_TYPE_ID,  # 課題の種別のID
-            'priorityId': PRIORITY_ID,  # 課題の優先度のID
-            'description': description  # 課題の詳細
+            'projectId': event['requestParameters']['project_id'],  # 課題を登録するプロジェクトのID
+            'summary': event['requestParameters']['summary'],  # 課題の件名
+            'assigneeId': event['requestParameters']['assignee_id'],  # 課題の担当者ID
+            'issueTypeId': event['requestParameters']['issue_type_id'],  # 課題の種別のID
+            'priorityId': event['requestParameters']['priority_id'],  # 課題の優先度のID
+            'description': event['requestParameters']['description']  # 課題の詳細
         }
         r = requests.post(HOST + '/api/v2/issues?' + API_KEY, data=data)
         print(r.json())
+        r_json = r.json()
+        print("-----")
+        print(r_json['issueType']['id'])
 
-        issues_id = 9999
+        issues_id = r_json['issueType']['id']
+
         return {
             'statusCode': 200,
             'headers': {
