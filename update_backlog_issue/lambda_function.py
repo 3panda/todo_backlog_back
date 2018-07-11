@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
@@ -13,8 +12,13 @@ def lambda_handler(event, context):
         PROJECT_KEY = os.environ['PROJECT_KEY']
         API_KEY = os.environ['API_KEY']
 
+        print(event)
+        # フォームに入力されたデータを得る
+        #param = urllib.parse.parse_qs(event['requestParameters'])
+        #print(param)
         # 仮 フロントから渡る値
-        ISSUE_ID = 1135285
+        #issues_id = 1157408
+        issues_id = event['requestParameters']['issues_id']
 
         params = {
             'statusId': 4,
@@ -24,8 +28,8 @@ def lambda_handler(event, context):
         print(HOST)
         print(PROJECT_KEY)
         print(API_KEY)
-        r = requests.patch(HOST + '/api/v2/issues/' + str(ISSUE_ID) + '?' + API_KEY, params=params)
-        print(r.json())
+        r = requests.patch(HOST + '/api/v2/issues/' + str(issues_id) + '?' + API_KEY, params=params)
+        # print(r.json())
 
         return {
             'statusCode': 200,
@@ -33,7 +37,7 @@ def lambda_handler(event, context):
                 'access-control-allow-origin': '*',
                 'content-type': 'application/json'
             },
-            'data': {'issues_id': ISSUE_ID},
+            'data': {'issues_id': issues_id},
             'completed': 1
 
         }
