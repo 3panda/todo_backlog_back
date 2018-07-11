@@ -24,12 +24,14 @@ def lambda_handler(event, context):
             'description': event['requestParameters']['description']  # 課題の詳細
         }
         r = requests.post(HOST + '/api/v2/issues?' + API_KEY, data=data)
-        print(r.json())
-        r_json = r.json()
-        print("-----")
-        print(r_json['issueType']['id'])
 
-        issues_id = r_json['issueType']['id']
+        r_json = r.json()
+        # print(r.json())
+        # print("-----")
+        # print(r_json['keyId'])
+        issues_id = r_json['id']
+
+        # issues_id = 11111
 
         return {
             'statusCode': 200,
